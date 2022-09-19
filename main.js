@@ -96,6 +96,8 @@ function avoidDoubleSymbols(input) {
       text !== "-" &&
       text !== "*" &&
       text !== "/" &&
+      text !== "%" &&
+      text !== "^" &&
       text !== "="
     ) {
       if (
@@ -103,6 +105,8 @@ function avoidDoubleSymbols(input) {
         (screenInput.includes("*") ||
           screenInput.includes("/") ||
           screenInput.includes("+") ||
+          screenInput.includes("%") ||
+          screenInput.includes("^") ||
           screenInput.includes("-"))
       ) {
         currentCalc.innerText += "=";
@@ -145,6 +149,8 @@ document.addEventListener("keyup", function (event) {
     `${event.key}` === "-" ||
     `${event.key}` === "*" ||
     `${event.key}` === "/" ||
+    `${event.key}` === "%" ||
+    `${event.key}` === "^" ||
     `${event.key}` === "Enter" ||
     `${event.key}` === "="
   ) {
@@ -169,6 +175,8 @@ for (let index = 0; index < options.length; index++) {
       btn.innerText === "-" ||
       btn.innerText === "*" ||
       btn.innerText === "/" ||
+      btn.innerText === "%" ||
+      btn.innerText === "^" ||
       btn.innerText === "="
     ) {
       avoidDoubleSymbols(btn.innerText);
@@ -181,6 +189,8 @@ for (let index = 0; index < options.length; index++) {
       btn.innerText !== "-" &&
       btn.innerText !== "*" &&
       btn.innerText !== "/" &&
+      btn.innerText !== "%" &&
+      btn.innerText !== "^" &&
       btn.innerText !== "="
     ) {
       currentCalc.innerText += btn.innerText;
