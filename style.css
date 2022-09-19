@@ -34,6 +34,7 @@ main {
   min-height: 80px;
   width: 400px;
   word-wrap: break-word;
+  word-break: break-all;
   border: 1px solid var(--secondary-color);
   border-radius: 10px;
   background-color: rgb(154, 232, 154);
