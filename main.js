@@ -2,42 +2,6 @@ const currentCalc = document.getElementById("currentCalc");
 const previousCalc = document.getElementById("previousCalc");
 const options = Array.from(document.querySelectorAll(".options"));
 
-/* function add(arr) {
-  let total = 0;
-  arr.forEach((element) => {
-    total += element;
-  });
-  return total;
-}
-
-function subtract(arr) {
-  let total = arr[0];
-  for (let i = 1; i < arr.length; i++) {
-    total -= arr[i];
-  }
-  return total;
-}
-
-function multiply(arr) {
-  let total = 1;
-  arr.forEach((element) => {
-    total *= element;
-  });
-  return total;
-}
-
-function divide(arr) {
-  let total = arr[0];
-  for (let i = 1; i < arr.length; i++) {
-    if (arr[i] === 0) {
-      currentCalc.innerText = "ERROR!";
-      return;
-    }
-    total /= arr[i];
-  }
-  return total;
-} */
-
 function optionRules(inputGiven) {
   if (currentCalc.innerText === "0" || currentCalc.innerText === "") {
     currentCalc.innerText = "";
@@ -54,7 +18,7 @@ function optionRules(inputGiven) {
     currentCalc.innerText = "0";
     return;
   }
-  if (inputGiven === "Backspace" || inputGiven === "Del") {
+  if (inputGiven === "Backspace" || inputGiven.toUpperCase() === "DEL") {
     let textLength = currentCalc.innerText.length;
     currentCalc.innerText = currentCalc.innerText.slice(0, textLength - 1);
     if (currentCalc.innerText === "") {
@@ -135,6 +99,10 @@ function operate() {
   currentCalc.innerText = eval(equation.replace(/[^-()\d/*+.]/g, ""));
 }
 
+document.addEventListener("keydown", (event) => {
+  event.preventDefault();
+});
+
 document.addEventListener("keyup", function (event) {
   optionRules(`${event.key}`);
 
@@ -183,7 +151,7 @@ for (let index = 0; index < options.length; index++) {
     }
     if (
       btn.innerText !== "CA" &&
-      btn.innerText !== "Del" &&
+      btn.innerText !== "DEL" &&
       btn.innerText !== "." &&
       btn.innerText !== "+" &&
       btn.innerText !== "-" &&
