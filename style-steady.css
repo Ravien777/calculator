@@ -7,6 +7,7 @@
 body {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   height: 100vh;
   align-items: center;
   justify-content: center;
@@ -17,23 +18,22 @@ h1 {
 }
 .container {
   position: relative;
+  min-width: 300px;
+  min-height: 400px;
+  padding: 40px 30px 30px;
   border-radius: 20px;
   box-shadow: 25px 25px 75px rgba(0, 0, 0, 0.25),
     10px 10px 70px rgba(0, 0, 0, 0.25), inset -5px -5px 15px rgba(0, 0, 0, 0.25),
     inset 5px 5px 15px rgba(0, 0, 0, 0.25);
-  padding: 30px 20px 20px;
-  margin: 10px;
-}
-.calculator {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(1fr, 100px));
-  grid-template-rows: repeat(8, minmax(1fr, 40px));
-  gap: 10px;
 }
 .container button {
-  position: relative;
   color: #000;
+  position: relative;
+  display: grid;
+  width: 80px;
+  place-items: center;
+  margin: 8px;
+  height: 80px;
   background: linear-gradient(180deg, #8f8651, #906b2f);
   box-shadow: inset -8px 0 8px rgba(0, 0, 0, 0.15),
     inset 0 -8px 8px rgba(0, 0, 0, 0.25), 0 0 0 2px rgba(53, 29, 2, 0.75),
@@ -42,9 +42,6 @@ h1 {
   cursor: pointer;
   font-weight: 400;
   border-radius: 10px;
-  min-width: 4rem;
-  min-height: 4rem;
-  place-items: center;
 }
 .calculator button:active {
   filter: brightness(1.5);
@@ -66,31 +63,34 @@ h1 {
 }
 .calculator button i {
   position: relative;
-  font-size: 1.1rem;
   font-style: normal;
+  font-size: 1.5em;
   text-transform: uppercase;
+}
+.calculator {
+  position: relative;
+  display: grid;
 }
 .calculator .value {
   position: relative;
+  grid-column: span 4;
+  /* grid-template-columns: repeat(4, minmax(1fr, 150px)); */
+  height: 100px;
+  width: calc(100% - 20px);
+  left: 10px;
   border: none;
   outline: none;
   background-color: #a7af7c;
+  margin-bottom: 10px;
   border-radius: 10px;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.75);
   text-align: right;
-  min-height: 6rem;
   padding: 10px;
   font-size: 2em;
-  margin-bottom: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  grid-column: span 4;
-  grid-row: span 2;
-  max-width: calc(16rem + 30px);
 }
 .calculator .ca {
   grid-column: span 2;
+  width: 180px;
   background: rgb(224, 87, 87);
 }
 .calculator .ca::before {
@@ -101,6 +101,7 @@ h1 {
 }
 .calculator .del {
   grid-column: span 2;
+  width: 180px;
   background: #bb7a2a;
 }
 .calculator .del::before {
@@ -117,4 +118,9 @@ h1 {
   border-left: 1px solid rgba(234, 213, 161, 0.628);
   border-bottom: 1px solid rgba(234, 213, 161, 0.628);
   border-top: 1px solid rgba(234, 213, 161, 0.628);
+}
+
+#calcInput {
+  white-space: nowrap;
+  overflow: hidden;
 }
