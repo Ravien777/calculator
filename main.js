@@ -60,8 +60,8 @@ function avoidDoubleSymbols(input) {
       text !== "-" &&
       text !== "*" &&
       text !== "/" &&
-      text !== "%" &&
-      text !== "^" &&
+      // text !== "%" &&
+      // text !== "^" &&
       text !== "="
     ) {
       if (
@@ -69,8 +69,8 @@ function avoidDoubleSymbols(input) {
         (screenInput.includes("*") ||
           screenInput.includes("/") ||
           screenInput.includes("+") ||
-          screenInput.includes("%") ||
-          screenInput.includes("^") ||
+          // screenInput.includes("%") ||
+          // screenInput.includes("^") ||
           screenInput.includes("-"))
       ) {
         currentCalc.innerText += "=";
@@ -96,7 +96,13 @@ function operate() {
   let calc = currentCalc.innerText;
   previousCalc.innerText = currentCalc.innerText;
   let equation = calc.slice(0, calc.length - 1);
-  currentCalc.innerText = eval(equation.replace(/[^-()\d/*+.]/g, ""));
+  let result = eval(equation.replace(/e[^-()\d/*+.]/g, ""));
+  
+  if (result.toString().includes("e")) {
+    result = result.toPrecision(2);
+  }
+
+  currentCalc.innerText = result;
 }
 
 document.addEventListener("keydown", (event) => {
@@ -117,8 +123,8 @@ document.addEventListener("keyup", function (event) {
     `${event.key}` === "-" ||
     `${event.key}` === "*" ||
     `${event.key}` === "/" ||
-    `${event.key}` === "%" ||
-    `${event.key}` === "^" ||
+    // `${event.key}` === "%" ||
+    // `${event.key}` === "^" ||
     `${event.key}` === "Enter" ||
     `${event.key}` === "="
   ) {
@@ -143,8 +149,8 @@ for (let index = 0; index < options.length; index++) {
       btn.innerText === "-" ||
       btn.innerText === "*" ||
       btn.innerText === "/" ||
-      btn.innerText === "%" ||
-      btn.innerText === "^" ||
+      // btn.innerText === "%" ||
+      // btn.innerText === "^" ||
       btn.innerText === "="
     ) {
       avoidDoubleSymbols(btn.innerText);
@@ -157,8 +163,8 @@ for (let index = 0; index < options.length; index++) {
       btn.innerText !== "-" &&
       btn.innerText !== "*" &&
       btn.innerText !== "/" &&
-      btn.innerText !== "%" &&
-      btn.innerText !== "^" &&
+      // btn.innerText !== "%" &&
+      // btn.innerText !== "^" &&
       btn.innerText !== "="
     ) {
       currentCalc.innerText += btn.innerText;
