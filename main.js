@@ -97,9 +97,13 @@ function operate() {
   previousCalc.innerText = currentCalc.innerText;
   let equation = calc.slice(0, calc.length - 1);
   let result = eval(equation.replace(/e[^-()\d/*+.]/g, ""));
-  
+
   if (result.toString().includes("e")) {
     result = result.toPrecision(2);
+  }
+
+  if (result.toString().length > 14 && result.toString().includes(".")) {
+    result = Number(result.toFixed(3));
   }
 
   currentCalc.innerText = result;
