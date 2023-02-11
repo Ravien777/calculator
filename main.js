@@ -1,52 +1,57 @@
 const currentCalc = document.getElementById("currentCalc");
 const previousCalc = document.getElementById("previousCalc");
 const options = Array.from(document.querySelectorAll(".options"));
+const DELETE = "Delete";
+const BACKSPACE = "Backspace";
+const CA = "CA";
+const DEL = "DEL";
+const ZERO = "0";
+const EMPTY_STRING = "";
 
 function optionRules(inputGiven) {
-  if (currentCalc.innerText === "0" || currentCalc.innerText === "") {
-    currentCalc.innerText = "";
-    if (
-      inputGiven.includes("*") ||
-      inputGiven.includes("+") ||
-      inputGiven.includes("-") ||
-      inputGiven.includes("/")
-    ) {
-      currentCalc.innerText = "0";
-    }
+  switch (inputGiven) {
+    case DELETE:
+    case CA:
+      currentCalc.innerText = ZERO;
+      break;
+    case BACKSPACE:
+    case DEL.toUpperCase():
+      handleBackspace();
+      break;
+    default:
+      handleInput(inputGiven);
   }
-  if (inputGiven === "Delete" || inputGiven === "CA") {
-    currentCalc.innerText = "0";
-    return;
-  }
-  if (inputGiven === "Backspace" || inputGiven.toUpperCase() === "DEL") {
-    let textLength = currentCalc.innerText.length;
-    currentCalc.innerText = currentCalc.innerText.slice(0, textLength - 1);
-    if (currentCalc.innerText === "") {
-      currentCalc.innerText = "0";
-    }
-    return;
+}
+
+function handleBackspace() {
+  let textLength = currentCalc.innerText.length;
+  currentCalc.innerText = currentCalc.innerText.slice(0, textLength - 1);
+  currentCalc.innerText =
+    currentCalc.innerText === EMPTY_STRING ? ZERO : currentCalc.innerText;
+}
+
+function handleInput(inputGiven) {
+  currentCalc.innerText =
+    currentCalc.innerText === ZERO || currentCalc.innerText === EMPTY_STRING
+      ? EMPTY_STRING
+      : currentCalc.innerText;
+  if (
+    inputGiven.includes("*") ||
+    inputGiven.includes("+") ||
+    inputGiven.includes("-") ||
+    inputGiven.includes("/")
+  ) {
+    currentCalc.innerText = ZERO;
   }
 }
 
 function avoidDoublePoint() {
-  /*
-   * Get text from input
-   * Check wether it contains operating symbols (+, -, *, ^, %, /)
-   * split by operating symbols (+, -, *, ^, %, /)
-   * Get last index of array containing split parts
-   * Check wether it already contains a '.'
-   * If no, allow point to be added
-   * If yes, don't add anything
-   */
-
   let screenInput = currentCalc.innerText;
-  let arrToSplitTo = screenInput.split(/[-*+\/]/);
-  let text = arrToSplitTo[arrToSplitTo.length - 1];
+  let arrToSplitTo = screenInput.split(/[-+*/]/);
+  let lastExpression = arrToSplitTo[arrToSplitTo.length - 1];
 
-  if (screenInput !== undefined && text !== undefined) {
-    if (!text.includes(".") && !text.includes("^")) {
-      currentCalc.innerText += ".";
-    }
+  if (!lastExpression.includes(".") && !lastExpression.includes("^")) {
+    currentCalc.innerText += ".";
   }
 }
 
@@ -54,57 +59,30 @@ function avoidDoubleSymbols(input) {
   let screenInput = currentCalc.innerText;
   let text = screenInput[screenInput.length - 1];
 
-  if (screenInput !== undefined && text !== undefined) {
-    if (
-      text !== "+" &&
-      text !== "-" &&
-      text !== "*" &&
-      text !== "/" &&
-      // text !== "%" &&
-      // text !== "^" &&
-      text !== "="
-    ) {
-      if (
-        (input === "=" || input === "Enter") &&
-        (screenInput.includes("*") ||
-          screenInput.includes("/") ||
-          screenInput.includes("+") ||
-          // screenInput.includes("%") ||
-          // screenInput.includes("^") ||
-          screenInput.includes("-"))
-      ) {
+  const symbolRegex = /[\+\-\*\/]/;
+
+  switch (input) {
+    case "=":
+    case "Enter":
+      if (symbolRegex.test(screenInput)) {
         currentCalc.innerText += "=";
         operate();
-      } else if (input !== "=" && input !== "Enter") {
+      }
+      break;
+    default:
+      if (!symbolRegex.test(text)) {
         currentCalc.innerText += input;
       }
-    }
+      break;
   }
 }
 
 function operate() {
-  /*
-   * Get equation from text
-   * Split equation by - into arr1
-   * Loop through arr1
-   * Check wether arr1 has elements that only contain * or / and call multiply or divide on them
-   *
-   *  and push element and - after every iteration to arr2
-   *
-   */
-
-  let calc = currentCalc.innerText;
+  let equation = currentCalc.innerText.slice(0, -1);
   previousCalc.innerText = currentCalc.innerText;
-  let equation = calc.slice(0, calc.length - 1);
   let result = eval(equation.replace(/e[^-()\d/*+.]/g, ""));
 
-  if (result.toString().includes("e")) {
-    result = result.toPrecision(2);
-  }
-
-  if (result.toString().length > 14 && result.toString().includes(".")) {
-    result = Number(result.toFixed(3));
-  }
+  result = Number(result.toFixed(3));
 
   currentCalc.innerText = result;
 }
@@ -113,65 +91,59 @@ document.addEventListener("keydown", (event) => {
   event.preventDefault();
 });
 
-document.addEventListener("keyup", function (event) {
-  optionRules(`${event.key}`);
+document.addEventListener("keyup", (event) => {
+  optionRules(event.key);
 
-  let usables = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+  const usables = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 
-  if (`${event.key}` === ".") {
-    avoidDoublePoint();
-  }
-
-  if (
-    `${event.key}` === "+" ||
-    `${event.key}` === "-" ||
-    `${event.key}` === "*" ||
-    `${event.key}` === "/" ||
-    // `${event.key}` === "%" ||
-    // `${event.key}` === "^" ||
-    `${event.key}` === "Enter" ||
-    `${event.key}` === "="
-  ) {
-    avoidDoubleSymbols(`${event.key}`);
-  }
-
-  if (usables.includes(`${event.key}`)) {
-    currentCalc.innerText += `${event.key}`;
+  switch (event.key) {
+    case ".":
+      avoidDoublePoint();
+      break;
+    case "+":
+    case "-":
+    case "*":
+    case "/":
+    case "Enter":
+    case "=":
+      avoidDoubleSymbols(event.key);
+      break;
+    default:
+      if (usables.includes(event.key)) {
+        currentCalc.innerText += event.key;
+      }
   }
 });
 
-for (let index = 0; index < options.length; index++) {
-  const option = options[index];
-  option.onclick = (e) => {
-    let btn = e.target;
+for (let option of options) {
+  option.addEventListener("click", (event) => {
+    let btn = event.target;
     optionRules(btn.innerText);
-    if (btn.innerText === ".") {
-      avoidDoublePoint();
+
+    switch (btn.innerText) {
+      case ".":
+        avoidDoublePoint();
+        break;
+      case "+":
+      case "-":
+      case "*":
+      case "/":
+      case "=":
+        avoidDoubleSymbols(btn.innerText);
+        break;
+      default:
+        if (
+          btn.innerText !== "CA" &&
+          btn.innerText !== "DEL" &&
+          btn.innerText !== "." &&
+          btn.innerText !== "+" &&
+          btn.innerText !== "-" &&
+          btn.innerText !== "*" &&
+          btn.innerText !== "/" &&
+          btn.innerText !== "="
+        ) {
+          currentCalc.innerText += btn.innerText;
+        }
     }
-    if (
-      btn.innerText === "+" ||
-      btn.innerText === "-" ||
-      btn.innerText === "*" ||
-      btn.innerText === "/" ||
-      // btn.innerText === "%" ||
-      // btn.innerText === "^" ||
-      btn.innerText === "="
-    ) {
-      avoidDoubleSymbols(btn.innerText);
-    }
-    if (
-      btn.innerText !== "CA" &&
-      btn.innerText !== "DEL" &&
-      btn.innerText !== "." &&
-      btn.innerText !== "+" &&
-      btn.innerText !== "-" &&
-      btn.innerText !== "*" &&
-      btn.innerText !== "/" &&
-      // btn.innerText !== "%" &&
-      // btn.innerText !== "^" &&
-      btn.innerText !== "="
-    ) {
-      currentCalc.innerText += btn.innerText;
-    }
-  };
+  });
 }
