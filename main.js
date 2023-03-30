@@ -31,17 +31,29 @@ function handleBackspace() {
 }
 
 function handleInput(inputGiven) {
-  currentCalc.innerText =
-    currentCalc.innerText === ZERO || currentCalc.innerText === EMPTY_STRING
-      ? EMPTY_STRING
-      : currentCalc.innerText;
   if (
-    inputGiven.includes("*") ||
-    inputGiven.includes("+") ||
-    inputGiven.includes("-") ||
-    inputGiven.includes("/")
+    currentCalc.innerText === ZERO &&
+    (inputGiven.includes("*") ||
+      inputGiven.includes("+") ||
+      inputGiven.includes("-") ||
+      inputGiven.includes("/"))
   ) {
-    currentCalc.innerText = ZERO;
+    currentCalc.innerText = `${ZERO}${inputGiven}`;
+  } else {
+    currentCalc.innerText =
+      currentCalc.innerText === ZERO || currentCalc.innerText === EMPTY_STRING
+        ? EMPTY_STRING
+        : currentCalc.innerText;
+  }
+
+  if (
+    currentCalc.innerText == "0" &&
+    (inputGiven.includes("*") ||
+      inputGiven.includes("+") ||
+      inputGiven.includes("-") ||
+      inputGiven.includes("/"))
+  ) {
+    currentCalc.innerText = `${ZERO}${inputGiven}`;
   }
 }
 
@@ -64,7 +76,11 @@ function avoidDoubleSymbols(input) {
   switch (input) {
     case "=":
     case "Enter":
-      if (symbolRegex.test(screenInput)) {
+      if (
+        symbolRegex.test(screenInput) &&
+        !screenInput.includes("=") &&
+        !symbolRegex.test(screenInput.charAt(screenInput.length - 1))
+      ) {
         currentCalc.innerText += "=";
         operate();
       }
